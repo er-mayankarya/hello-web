@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=build /app/target/hello-web-1.0-SNAPSHOT.jar app.jar
 
 # Expose port
-EXPOSE 8080
+EXPOSE 9090
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
