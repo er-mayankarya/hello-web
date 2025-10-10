@@ -58,14 +58,21 @@ pipeline {
     }
 
     stage('Deploy to Minikube') {
-      steps {
-        sh """
-          sed "s|REPLACE_REGISTRY|${REGISTRY}|g" k8s/deployment.yaml | kubectl apply -f -
-          kubectl apply -f k8s/service.yaml
-          kubectl rollout status deploy/${IMAGE_NAME} --timeout=120s
-        """
-      }
-    }
+  steps {
+    sh '''
+      # Ensure namespace exists (if using one)
+      kubectl get ns hello || kubectl create ns hello
+
+      # Apply manifests
+      sed "s|REPLACE_REGISTRY|${REGISTRY}|g" k8s/deployment.yaml | kubectl apply -f -
+      kubectl apply -f k8s/service.yaml
+
+      # Wait for rollout (specify namespace if needed)
+      kubectl rollout status deployment/hello-web -n hello --timeout=120s
+    '''
+  }
+}
+
   }
 
   post {
