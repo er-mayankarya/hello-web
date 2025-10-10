@@ -8,5 +8,5 @@ spec:
   selector: { app: hello-web }
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 9090
       nodePort: 30080
